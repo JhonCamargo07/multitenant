@@ -52,7 +52,6 @@ public class Validaciones {
      */
     public static boolean esPasswordCorrecto(String pass) {
         if (!pass.equals("")) {
-            System.out.println(pass.length());
             if (pass.length() >= Validaciones.CANTIDAD_MINIMA_PASSWORD) {
                 return true;
             }

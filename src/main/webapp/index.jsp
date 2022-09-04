@@ -20,13 +20,13 @@
             <div class="col-md-6 mt-5">
                 <h1 class="text-center fw-bold">Iniciar sesi&#243;n</h1>
                 <!-- Login -->
-                <form action="Usuario" id="form" method="POST" class="needs-validation text-start" novalidate>
+                <form action="${pageContext.request.contextPath}/Usuario" id="formLogin" method="POST" class="needs-validation text-start" novalidate>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo electr&#243;nico
                             <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="janedoe@mail.com"
+                        <input type="email" class="form-control" name="email" id="emailLogin" placeholder="janedoe@mail.com"
                             minlength="10" required />
-                        <input type="hidden" name="opcion" id="opcion" value="1">
+                        <input type="hidden" name="opcion" id="opcionLogin" value="1">
                         <span class="invalid-feedback text-size-r">El correo solo puede contener letras,
                             números, puntos,
                             guiones, guion bajo, debe ser un correo válido y no puede
@@ -36,7 +36,7 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Contrase&#241;a <span
                                 class="text-danger">*</span></label>
-                        <input type="password" class="form-control" name="pass" id="password" placeholder=""
+                        <input type="password" class="form-control" name="pass" id="passwordLogin" placeholder=""
                             minlength="10" maxlength="30" required />
                         <span class="invalid-feedback text-size-r">La contrase&#241;a debe ser de 10 a 30
                             caracteres</span>
@@ -54,11 +54,48 @@
                         </button>
                     </div>
                 </form>
-                <div id="msg"></div>
+                <div id="msgLogin"></div>
                 <!-- /Login -->
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-5">
+                <h1 class="text-center fw-bold">Registrarme</h1>
+                <!-- Form singup -->
+                <form action="${pageContext.request.contextPath}/Usuario" id="formSignUp" method="POST" class="needs-validation text-start" novalidate>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo electr&#243;nico
+                            <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" id="emailSignUp" placeholder="janedoe@mail.com"
+                            minlength="10" required />
+                        <input type="hidden" name="opcion" id="opcion" value="2">
+                        <span class="invalid-feedback text-size-r">El correo solo puede contener letras,
+                            números, puntos,
+                            guiones, guion bajo, debe ser un correo válido y no puede
+                            estar vacío</span>
+                        <span class="valid-feedback">Correo valido</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contrase&#241;a <span
+                                class="text-danger">*</span></label>
+                        <input type="password" class="form-control" name="pass" id="passwordSignUp" placeholder=""
+                            minlength="10" maxlength="30" required />
+                        <span class="invalid-feedback text-size-r">La contrase&#241;a debe ser de 10 a 30
+                            caracteres</span>
+                        <span class="valid-feedback">Contraseña valida</span>
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" name="connected" class="form-check-input" />
+                        <label for="connected" class="form-check-label text-size-r">Mantenerme conectado</label>
+                    </div>
 
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger text-white w-100 fw-bold text-size-18 px-3 fw-bold"
+                            id="btnIniciarSesion">
+                            Crear cuenta
+                        </button>
+                    </div>
+                </form>
+                <div id="msgSignUp"></div>
+                <!-- Form singup -->
             </div>
         </div>
     </div>
@@ -73,28 +110,48 @@
         crossorigin="anonymous"></script> -->
 
     <script>
-        const form = document.getElementById('form');
+        const formLogin = document.getElementById('formLogin');
+        const formSignUp = document.getElementById('formSignUp');
 
-        form.addEventListener('submit', (e) => {
+        formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
             login();
         });
 
-
+        formSignUp.addEventListener('submit', (e) => {
+            e.preventDefault();
+            signUp();
+        });
 
         function login() {
             var parametro = {
-                "opcion": document.getElementById('opcion').value,
-                "email": document.getElementById('email').value,
-                "pass": document.getElementById('password').value
+                "opcion": 1,
+                "email": document.getElementById('emailLogin').value,
+                "pass": document.getElementById('passwordLogin').value
             }
 
             $.ajax({
                 data: parametro,
                 url: 'Usuario',
                 type: 'POST',
-                success: function (saludo) {
-                    $('#msg').html(saludo);
+                success: function (mensaje) {
+                    $('#msgLogin').html(mensaje);
+                }
+            });
+        };
+        function signUp() {
+            var parametro = {
+                "opcion": 2,
+                "email": document.getElementById('emailSignUp').value,
+                "pass": document.getElementById('passwordSignUp').value
+            }
+
+            $.ajax({
+                data: parametro,
+                url: 'Usuario',
+                type: 'POST',
+                success: function (mensaje) {
+                    $('#msgSignUp').html(mensaje);
                 }
             });
         };

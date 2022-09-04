@@ -48,15 +48,27 @@ public class UsuarioController extends HttpServlet {
             case 1: //Login
                 if (!Validaciones.esEmailCorrecto(email) || !Validaciones.esPasswordCorrecto(pass)) {
                     try ( PrintWriter out = response.getWriter()) {
-                        out.println("Datos erroneos");
+                        out.println("Datos erroneos, la cantidad de caracteres minima es 10");
                     }
                 } else {
                     usuarioVo = new UsuarioVO(email, pass);
                     this.login(request, response, usuarioVo);
                 }
                 break;
+            case 2: //SignUp
+                if (!Validaciones.esEmailCorrecto(email) || !Validaciones.esPasswordCorrecto(pass)) {
+                    try ( PrintWriter out = response.getWriter()) {
+                        out.println("Datos erroneos, la cantidad de caracteres minima es 10");
+                    }
+                } else {
+                    usuarioVo = new UsuarioVO(email, pass);
+                    this.signUp(request, response, usuarioVo);
+                }
+                break;
             default:
-                throw new AssertionError();
+                    try ( PrintWriter out = response.getWriter()) {
+                out.println("Ok, ok, ok");
+            }
         }
     }
 
@@ -81,11 +93,20 @@ public class UsuarioController extends HttpServlet {
             sesion.setAttribute("empresas", empresas);
             try ( PrintWriter out = response.getWriter()) {
                 out.println(empresas);
+                out.println("<script>location.href = \"menu.jsp\";</script>");
             }
-        }else{
+        } else {
             try ( PrintWriter out = response.getWriter()) {
                 out.println("No se encontraron los datos");
             }
+        }
+    }
+
+    private void signUp(HttpServletRequest request, HttpServletResponse response, UsuarioVO usuarioVo) throws IOException {
+        String idUsuario = usuarioDao.signUp(usuarioVo.getEmailUsuario(), usuarioVo.getPasswordUsuario());
+        if (!idUsuario.equals("0")) {
+            usuarioVo.setIdUsuario(idUsuario);
+            this.login(request, response, usuarioVo);
         }
     }
 

@@ -1,17 +1,23 @@
 package ModelDAO;
 
-import ModelVO.UsuarioVO;
+import ModelVO.EmpresaVO;
 import java.sql.*;
-import java.util.logging.*;
-import util.Password;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Esta clase se encarga de tener lo metodos que gestionan la bd
+ * Esta clase de encargara de tener todos los metodos que gestionan los datos en
+ * la bd
  *
  * @author Jhon Camargo
  * @version 1.0.0
  */
-public class UsuarioDAO extends Conexion {
+public class EmpresaDAO {
 
     private Connection conn = null;
     private PreparedStatement stmt = null;
@@ -24,23 +30,20 @@ public class UsuarioDAO extends Conexion {
      *
      * @return String, retorna el id del usuario que inicia sesion
      */
-    public String iniciarSesion(String emailUsuario, String passwordUsuario) {
-        UsuarioVO usuarioVo = null;
-        String idUsuario = "0";
-//        sql = "SELECT id_usuario, email_usuario, password_usuario FROM usuario WHERE BINARY email_usuario = ?";
-        sql = "SELECT * FROM usuario WHERE BINARY email_usuario = ?";
+    public List<EmpresaVO> select(String idUsuario) {
+        EmpresaVO empresaVo = null;
+        List<EmpresaVO> empresas = new ArrayList<>();
+        sql = "SELECT id_empresa, nombre_empresa, id_usuario, informacion_empresa, img_empresa FROM empresa WHERE id_usuario = ?";
 
         try {
             conn = Conexion.getConnection();
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, emailUsuario);
+            stmt.setString(1, idUsuario);
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                usuarioVo = new UsuarioVO(rs.getString("id_usuario"), rs.getString("email_usuario"), rs.getString("password_usuario"));
-                if (Password.verifyPassword(passwordUsuario, usuarioVo.getPasswordUsuario())) {
-                    idUsuario = rs.getString("id_usuario");
-                }
+                empresaVo = new EmpresaVO(rs.getString("id_empresa"), rs.getString("id_empresa"), rs.getString("nombre_empresa"), rs.getString("informacion_empresa"), rs.getString("img_empresa"));
+                empresas.add(empresaVo);
             }
 
         } catch (SQLException ex) {
@@ -51,6 +54,6 @@ public class UsuarioDAO extends Conexion {
             Conexion.close(stmt);
             Conexion.close(conn);
         }
-        return idUsuario;
+        return empresas;
     }
 }
